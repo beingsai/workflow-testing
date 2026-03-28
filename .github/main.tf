@@ -19,25 +19,28 @@ data "aws_security_group" "default" {
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
-filter {
+
+  filter {
     name   = "name"
     values = ["al2023-ami-*-x86_64"]
   }
-filter {
+
+  filter {
     name   = "architecture"
     values = ["x86_64"]
   }
-filter {
-    name = "virtualization-type"
-values = ["hvm"]
-}
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
 
 resource "aws_instance" "splunk_ec2" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = var.instance_type
   subnet_id                   = data.aws_subnet.controller_subnet.id
-  vpc_security_group_ids       = [data.aws_security_group.default.id]
+  vpc_security_group_ids      = [data.aws_security_group.default.id]
   associate_public_ip_address = true
   key_name                    = var.key_name
 
