@@ -1,17 +1,11 @@
-variable "aws_region" {
-  description = "AWS region where resources will be created"
-  type        = string
-  default     = "ap-south-1"
+output "instance_id" {
+  value = aws_instance.splunk_ec2.id
 }
 
-variable "instance_type" {
-  description = "EC2 instance type"
-  type        = string
-  default     = "t2.micro"
+output "public_ip" {
+  value = aws_instance.splunk_ec2.public_ip
 }
 
-variable "key_name" {
-  description = "Name of the existing EC2 Key Pair"
-  type        = string
-  default     = "saiawsdem0-account-keypair"   # ⚠️ NO .pem
+output "public_dns" {
+  value = aws_instance.splunk_ec2.public_dns
 }
