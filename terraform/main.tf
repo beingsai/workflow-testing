@@ -2,20 +2,31 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Get default VPC
 data "aws_vpc" "default" {
   default = true
 }
 
-# Use the correct subnet ID for ap-south-1a in your default VPC
-data "aws_subnet" "controller_subnet" {
-  id = "subnet-0e4c077a270a82185"
+# Get subnets dynamically (NO hardcoding)
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
+# Pick first subnet
+data "aws_subnet" "controller_subnet" {
+  id = data.aws_subnets.default.ids[0]
+}
+
+# Default security group
 data "aws_security_group" "default" {
   name   = "default"
   vpc_id = data.aws_vpc.default.id
 }
 
+# Latest Amazon Linux 2023 AMI
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -36,6 +47,7 @@ data "aws_ami" "al2023" {
   }
 }
 
+# EC2 Instance
 resource "aws_instance" "splunk_ec2" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = var.instance_type
