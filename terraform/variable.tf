@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "AWS region where resources will be created"
+  description = "AWS region"
   type        = string
   default     = "ap-south-1"
 }
@@ -7,11 +7,11 @@ variable "aws_region" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"   # ✅ FIXED (free tier supported)
 }
 
 variable "key_name" {
-  description = "Name of the existing EC2 Key Pair"
+  description = "EC2 Key Pair name"
   type        = string
-  default     = "saiawsdem0-account-keypair"
+  default     = "saiawsdem0-account-keypair"   # ❌ no .pem
 }
