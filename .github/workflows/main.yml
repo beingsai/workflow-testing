@@ -1,10 +1,10 @@
-name: Terraform Deploy & Destroy
+name: Terraform Manual Deploy & Destroy
 
 on:
   workflow_dispatch:
     inputs:
       action:
-        description: "Choose action"
+        description: "Select action"
         required: true
         default: "apply"
         type: choice
@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show Selected Action
+        run: echo "Action = ${{ github.event.inputs.action }}"
+
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -34,6 +37,7 @@ jobs:
         run: terraform init
         working-directory: ./terraform
 
+      # APPLY
       - name: Terraform Plan
         if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform plan
@@ -44,6 +48,7 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
 
+      # DESTROY
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
