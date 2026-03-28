@@ -1,9 +1,6 @@
 name: Terraform Deploy & Destroy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       action:
@@ -38,12 +35,12 @@ jobs:
         working-directory: ./terraform
 
       - name: Terraform Plan
-        if: ${{ github.event.inputs.action != 'destroy' }}
+        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform plan
         working-directory: ./terraform
 
       - name: Terraform Apply
-        if: ${{ github.event.inputs.action != 'destroy' }}
+        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -auto-approve
         working-directory: ./terraform
 
