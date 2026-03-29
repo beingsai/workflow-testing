@@ -1,15 +1,12 @@
-name: Terraform Manual Deploy
+name: Terraform Fully Automated Deploy
 
 on:
-  workflow_dispatch:
-    inputs:
-      action:
-        description: "Choose Terraform action"
-        required: true
-        type: choice
-        options:
-          - apply
-          - destroy
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.tf"
+      - ".github/workflows/*.yml"
 
 jobs:
   terraform:
@@ -17,7 +14,7 @@ jobs:
 
     steps:
       # 1️⃣ Checkout repository
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       # 2️⃣ Install Terraform
@@ -32,17 +29,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-south-1
 
-      # 4️⃣ Terraform Plan (Apply Only)
+      # 4️⃣ Terraform Plan
       - name: Terraform Plan
-        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform plan
 
-      # 5️⃣ Terraform Apply
+      # 5️⃣ Terraform Apply (FULL AUTO)
       - name: Terraform Apply
-        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -auto-approve
-
-      # 6️⃣ Terraform Destroy
-      - name: Terraform Destroy
-        if: ${{ github.event.inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve
