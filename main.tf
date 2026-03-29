@@ -22,7 +22,7 @@ provider "aws" {
 }
 
 ########################################
-# Variables (With Defaults)
+# Variables (Defaults Included)
 ########################################
 
 variable "aws_region" {
@@ -38,38 +38,38 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  description = "Existing EC2 key pair name"
+  description = "EC2 key pair name"
   type        = string
-  default     = "my-keypair" # CHANGE if needed
+  default     = "my-keypair" # CHANGE THIS
 }
 
 ########################################
 # Data Sources
 ########################################
 
-# Get all available AZs
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
-# Get default VPC
+# Default VPC
 data "aws_vpc" "default" {
   default = true
 }
 
-# Get default subnet from first AZ
+# Available AZs
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+# Default subnet (first AZ)
 data "aws_subnet" "default" {
   default_for_az    = true
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 
-# Get default security group
+# Default security group
 data "aws_security_group" "default" {
   name   = "default"
   vpc_id = data.aws_vpc.default.id
 }
 
-# Get latest Amazon Linux 2023 AMI
+# Latest Amazon Linux 2023 AMI
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -112,12 +112,7 @@ resource "aws_instance" "splunk_ec2" {
 # Outputs
 ########################################
 
-output "instance_id" {
-  description = "EC2 Instance ID"
-  value       = aws_instance.splunk_ec2.id
-}
-
 output "public_ip" {
-  description = "EC2 Public IP"
+  description = "Public IP of EC2 instance"
   value       = aws_instance.splunk_ec2.public_ip
 }
