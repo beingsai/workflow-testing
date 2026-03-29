@@ -40,7 +40,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "EC2 key pair name"
   type        = string
-  default     = "saiawsdemo-account-keypair" # CHANGE THIS
+  default     = "saiawsdem0-account-keypair" # CHANGE THIS
 }
 
 ########################################
